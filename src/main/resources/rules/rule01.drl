@@ -1,0 +1,104 @@
+package rules;
+dialect  "java"
+
+import com.drools.demo01.entity.*;
+
+/*
+
+rule "rule - a"
+// 相同activation-group只会评估一个
+activation-group "group01"
+salience 999
+    when
+        $lover : Lover();
+    then
+        System.out.println("1");
+end
+
+rule "rule - b"
+activation-group "group01"
+salience 1000
+    when
+        $lover : Lover();
+    then
+        System.out.println("2");
+end
+
+rule "rule - c"
+activation-group "group01"
+salience 100
+    when
+        $lover : Lover();
+    then
+        System.out.println("3");
+end
+*/
+
+
+
+rule "rule - d"
+// 需要激活才会执行
+agenda-group "abc"
+
+    when
+        $lover : Lover(name == "AAA");
+    then
+        System.out.println("激活");
+end
+
+
+rule "rule - e"
+//执行的优先级
+salience 1
+    when
+        $lover : Lover(name == "AAA" && age <= 3);
+    then
+        System.out.println("drl中name:"+$lover.getName());
+        System.out.println("drl中age1:"+$lover.getAge());
+        $lover.setAge($lover.getAge()+1);
+        System.out.println("drl中age2:"+$lover.getAge());
+        update($lover);
+//        retract($lover);
+        //激活 agenda-group "group001"
+        kcontext.getKieRuntime().getAgenda().getAgendaGroup("group001").setFocus();
+end
+
+
+rule "rule - f"
+agenda-group "group001"
+//是否循环
+no-loop true
+//是否循环(agenda-group) 情况使用
+lock-on-active true
+    when
+        $lover : Lover(name == "AAA");
+    then
+        System.out.println($lover.getName());
+end
+
+rule "rule - g"
+    when
+        $lover : Lover(name == "AAA");
+    then
+        $lover.setAge(6);
+        System.out.println($lover.getName());
+    update($lover)
+end
+
+
+rule "rule - h"
+    when
+        $person : Person(name == "AAA");
+    then
+        $person.setAge(6);
+        System.out.println($person.getName());
+        Person person = new Person();
+        person.setName("BBB");
+        person.setAge(3);
+    //插入一个新的Fact对象，会触发规则的再次执行
+//    insert(person)
+    update($person)
+end
+
+
+
