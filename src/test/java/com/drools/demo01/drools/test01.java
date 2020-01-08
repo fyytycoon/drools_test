@@ -25,7 +25,11 @@ import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
+import org.springframework.context.ApplicationContext;
 
+import javax.naming.InitialContext;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,12 +54,17 @@ public class test01 {
     }
 
     @Test
-    public void test02() throws Exception {
-        List<Person> personList = new ArrayList<Person>();
-        Iterator<Person> personIterable = personList.iterator();
-        while (personIterable.hasNext()){
+    public void test02() throws UnknownHostException {
+//        List<Person> personList = new ArrayList<Person>(3);
+        /*Iterator<Person> personIterator = personList.iterator();
+        while (personIterator.hasNext()){
 
-        }
+        }*/
+//        System.out.println(personList);
+        String ip= InetAddress.getLocalHost().getHostAddress();
+        String osName = System.getProperty("os.name");
+        System.out.println("当前系统为：" + ip);
+        System.out.println("当前系统为：" + osName);
     }
     @Test
     public void test3() throws Exception {
