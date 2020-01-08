@@ -25,6 +25,7 @@ import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.utils.KieService;
 import org.springframework.context.ApplicationContext;
 
 import javax.naming.InitialContext;
@@ -147,6 +148,40 @@ public class test01 {
         KieBase kBase = KnowledgeBaseFactory.newKnowledgeBase();
         ((KnowledgeBase) kBase).addKnowledgePackages(builder.getKnowledgePackages());
         //获取规则引擎会话session
+        KieSession kieSession = kBase.newKieSession();
+        kieSession.insert(person);
+        kieSession.fireAllRules();
+        kieSession.dispose();
+        System.out.println("drl之后："+person.toString());
+    }
+
+    @Test
+    public void test7() throws Exception {
+        Person person = new Person();
+        person.setName("AAA");
+
+        String rule = "package rules;\n" +
+                "dialect  \"java\"\n" +
+                "\n" +
+                "import com.drools.demo01.entity.*;\n"+"rule \"rule - f\"\n" +
+                "    when\n" +
+                "        $person : Person(name == \"AAA\");\n" +
+                "    then\n" +
+                "        $person.setAge(6);\n" +
+                "        System.out.println($person.getName());\n" +
+                "        $person.setName(\"BBB\");\n" +
+                "        $person.setAge(3);\n" +
+                "    update($person)\n" +
+                "end";
+
+        KieFileSystem kieFileSystem = KieServices.Factory.get().newKieFileSystem();
+        kieFileSystem.write("src/main/resources/rules/rule02.drl",rule.getBytes());
+        KieBuilder kieBuilder = KieServices.Factory.get().newKieBuilder(kieFileSystem).buildAll();
+        if (kieBuilder.getResults().getMessages(Message.Level.ERROR).size() > 0) {
+            throw new Exception();
+        }
+        KieContainer kieContainer = KieServices.Factory.get().newKieContainer(KieServices.Factory.get().getRepository().getDefaultReleaseId());
+        KieBase kBase = kieContainer.getKieBase();
         KieSession kieSession = kBase.newKieSession();
         kieSession.insert(person);
         kieSession.fireAllRules();

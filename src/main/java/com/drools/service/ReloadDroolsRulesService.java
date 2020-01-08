@@ -1,7 +1,6 @@
 package com.drools.service;
 
-import com.neo.drools.model.Rule;
-import com.neo.drools.repository.RuleRepository;
+import com.drools.model.Rule;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -22,19 +21,17 @@ public class ReloadDroolsRulesService {
 
     public static KieContainer kieContainer;
 
-    @Autowired
-    private RuleRepository ruleRepository;
 
-    public  void reload(){
+    /*public  void reload(){
         KieContainer kieContainer=loadContainerFromString(loadRules());
         this.kieContainer=kieContainer;
     }
 
     private List<Rule>  loadRules(){
-        List<Rule> rules=ruleRepository.findAll();
+       *//* List<Rule> rules=ruleRepository.findAll();
 //        System.out.println(rules.toString());
-        return rules;
-    }
+        return rules;*//*
+    }*/
     private KieContainer loadContainerFromString(List<Rule> rules) {
         long startTime = System.currentTimeMillis();
         KieServices ks = KieServices.Factory.get();

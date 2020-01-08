@@ -1,29 +1,17 @@
 package com.drools.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.annotation.Id;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import java.io.Serializable;
 
-@Entity
-public class Rule implements Serializable {
+public class Rule  {
 
-	private static final long serialVersionUID = 1L;
-    @Id
-	@GeneratedValue
+
 	private Long id;
-	@Column(nullable = false, unique = true)
 	private String ruleKey;
-	@Column(nullable = false)
 	private String content;
-	@Column(nullable = false, unique = true)
 	private String version;
-	@Column(nullable = true, unique = true)
 	private String lastModifyTime;
-	@Column(nullable = false)
 	private String createTime;
 
 	public Long getId() {
@@ -76,8 +64,8 @@ public class Rule implements Serializable {
 
 
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+//	@Override
+//	public String toString() {
+//		return ToStringBuilder.reflectionToString(this);
+//	}
 }
