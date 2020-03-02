@@ -52,3 +52,55 @@
         return rules;
     }
 ```
+
+
+
+```
+String rule = "package rules;\n" +
+                "dialect  \"java\"\n" +
+                "\n" +
+                "import com.drools.demo01.entity.*;\n"+"rule \"rule - f\"\n" +
+                "    when\n" +
+                "        $person : Person(name == \"AAA\");\n" +
+                "    then\n" +
+                "        $person.setAge(6);\n" +
+                "        System.out.println($person.getName());\n" +
+                "        $person.setName(\"BBB\");\n" +
+                "        $person.setAge(3);\n" +
+                "    update($person)\n" +
+                "end";
+
+        KieFileSystem kieFileSystem = KieServices.Factory.get().newKieFileSystem();
+        kieFileSystem.write("src/main/resources/rules/rule02.drl",rule.getBytes());
+        KieBuilder kieBuilder = KieServices.Factory.get().newKieBuilder(kieFileSystem).buildAll();
+        if (kieBuilder.getResults().getMessages(Message.Level.ERROR).size() > 0) {
+            throw new Exception();
+        }
+        KieContainer kieContainer = KieServices.Factory.get().newKieContainer(KieServices.Factory.get().getRepository().getDefaultReleaseId());
+        KieBase kBase = kieContainer.getKieBase();
+        //获取规则引擎会话session
+        KieSession kieSession = kBase.newKieSession();
+        kieSession.insert(person);
+        kieSession.fireAllRules();
+        kieSession.dispose();
+```
+
+```
+KieServices kieServices = KieServices.Factory.get();
+        KieFileSystem kfs = kieServices.newKieFileSystem();
+        Resource resource = kieServices.getResources().newClassPathResource("rules/rule01.drl");
+        resource.setResourceType(ResourceType.DRL);
+        kfs.write(resource);
+        KieBuilder kieBuilder = kieServices.newKieBuilder(kfs).buildAll();
+        if (kieBuilder.getResults().getMessages(Message.Level.ERROR).size() > 0) {
+            throw new Exception();
+        }
+        KieContainer kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+        KieBase kBase = kieContainer.getKieBase();
+        //获取规则引擎会话session
+        KieSession kieSession = kBase.newKieSession();
+        kieSession.insert(person);
+        kieSession.fireAllRules();
+        kieSession.dispose();
+```
+
